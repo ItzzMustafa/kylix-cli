@@ -3,8 +3,8 @@
 //! Only benchmarks fast (-f) variants to keep CI times reasonable.
 
 use criterion::{criterion_group, criterion_main, Criterion};
-use kylix_pqc::slh_dsa::{SlhDsaShake128f, SlhDsaShake192f, SlhDsaShake256f};
-use rand::rngs::OsRng;
+use kylix_pqc::slh_dsa::{SlhDsaShake128f, SlhDsaShake192f, SlhDsaShake256f, Signer};
+use rand::rng;
 
 const MESSAGE: &[u8] = b"Benchmark message for SLH-DSA signature testing";
 
@@ -12,10 +12,10 @@ fn bench_slh_dsa_shake_128f(c: &mut Criterion) {
     let mut group = c.benchmark_group("SLH-DSA-SHAKE-128f");
 
     group.bench_function("keygen", |b| {
-        b.iter(|| SlhDsaShake128f::keygen(&mut OsRng).unwrap())
+        b.iter(|| SlhDsaShake128f::keygen(&mut rng()).unwrap())
     });
 
-    let (sk, vk) = SlhDsaShake128f::keygen(&mut OsRng).unwrap();
+    let (sk, vk) = SlhDsaShake128f::keygen(&mut rng()).unwrap();
 
     group.bench_function("sign", |b| {
         b.iter(|| SlhDsaShake128f::sign(&sk, MESSAGE).unwrap())
@@ -34,10 +34,10 @@ fn bench_slh_dsa_shake_192f(c: &mut Criterion) {
     let mut group = c.benchmark_group("SLH-DSA-SHAKE-192f");
 
     group.bench_function("keygen", |b| {
-        b.iter(|| SlhDsaShake192f::keygen(&mut OsRng).unwrap())
+        b.iter(|| SlhDsaShake192f::keygen(&mut rng()).unwrap())
     });
 
-    let (sk, vk) = SlhDsaShake192f::keygen(&mut OsRng).unwrap();
+    let (sk, vk) = SlhDsaShake192f::keygen(&mut rng()).unwrap();
 
     group.bench_function("sign", |b| {
         b.iter(|| SlhDsaShake192f::sign(&sk, MESSAGE).unwrap())
@@ -56,10 +56,10 @@ fn bench_slh_dsa_shake_256f(c: &mut Criterion) {
     let mut group = c.benchmark_group("SLH-DSA-SHAKE-256f");
 
     group.bench_function("keygen", |b| {
-        b.iter(|| SlhDsaShake256f::keygen(&mut OsRng).unwrap())
+        b.iter(|| SlhDsaShake256f::keygen(&mut rng()).unwrap())
     });
 
-    let (sk, vk) = SlhDsaShake256f::keygen(&mut OsRng).unwrap();
+    let (sk, vk) = SlhDsaShake256f::keygen(&mut rng()).unwrap();
 
     group.bench_function("sign", |b| {
         b.iter(|| SlhDsaShake256f::sign(&sk, MESSAGE).unwrap())

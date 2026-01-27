@@ -2,22 +2,22 @@
 
 use criterion::{criterion_group, criterion_main, Criterion};
 use kylix_pqc::ml_kem::{Kem, MlKem512, MlKem768, MlKem1024};
-use rand::rngs::OsRng;
+use rand::rng;
 
 fn bench_ml_kem_512(c: &mut Criterion) {
     let mut group = c.benchmark_group("ML-KEM-512");
 
     group.bench_function("keygen", |b| {
-        b.iter(|| MlKem512::keygen(&mut OsRng).unwrap())
+        b.iter(|| MlKem512::keygen(&mut rng()).unwrap())
     });
 
-    let (dk, ek) = MlKem512::keygen(&mut OsRng).unwrap();
+    let (dk, ek) = MlKem512::keygen(&mut rng()).unwrap();
 
     group.bench_function("encaps", |b| {
-        b.iter(|| MlKem512::encaps(&ek, &mut OsRng).unwrap())
+        b.iter(|| MlKem512::encaps(&ek, &mut rng()).unwrap())
     });
 
-    let (ct, _ss) = MlKem512::encaps(&ek, &mut OsRng).unwrap();
+    let (ct, _ss) = MlKem512::encaps(&ek, &mut rng()).unwrap();
 
     group.bench_function("decaps", |b| {
         b.iter(|| MlKem512::decaps(&dk, &ct).unwrap())
@@ -30,16 +30,16 @@ fn bench_ml_kem_768(c: &mut Criterion) {
     let mut group = c.benchmark_group("ML-KEM-768");
 
     group.bench_function("keygen", |b| {
-        b.iter(|| MlKem768::keygen(&mut OsRng).unwrap())
+        b.iter(|| MlKem768::keygen(&mut rng()).unwrap())
     });
 
-    let (dk, ek) = MlKem768::keygen(&mut OsRng).unwrap();
+    let (dk, ek) = MlKem768::keygen(&mut rng()).unwrap();
 
     group.bench_function("encaps", |b| {
-        b.iter(|| MlKem768::encaps(&ek, &mut OsRng).unwrap())
+        b.iter(|| MlKem768::encaps(&ek, &mut rng()).unwrap())
     });
 
-    let (ct, _ss) = MlKem768::encaps(&ek, &mut OsRng).unwrap();
+    let (ct, _ss) = MlKem768::encaps(&ek, &mut rng()).unwrap();
 
     group.bench_function("decaps", |b| {
         b.iter(|| MlKem768::decaps(&dk, &ct).unwrap())
@@ -52,16 +52,16 @@ fn bench_ml_kem_1024(c: &mut Criterion) {
     let mut group = c.benchmark_group("ML-KEM-1024");
 
     group.bench_function("keygen", |b| {
-        b.iter(|| MlKem1024::keygen(&mut OsRng).unwrap())
+        b.iter(|| MlKem1024::keygen(&mut rng()).unwrap())
     });
 
-    let (dk, ek) = MlKem1024::keygen(&mut OsRng).unwrap();
+    let (dk, ek) = MlKem1024::keygen(&mut rng()).unwrap();
 
     group.bench_function("encaps", |b| {
-        b.iter(|| MlKem1024::encaps(&ek, &mut OsRng).unwrap())
+        b.iter(|| MlKem1024::encaps(&ek, &mut rng()).unwrap())
     });
 
-    let (ct, _ss) = MlKem1024::encaps(&ek, &mut OsRng).unwrap();
+    let (ct, _ss) = MlKem1024::encaps(&ek, &mut rng()).unwrap();
 
     group.bench_function("decaps", |b| {
         b.iter(|| MlKem1024::decaps(&dk, &ct).unwrap())
