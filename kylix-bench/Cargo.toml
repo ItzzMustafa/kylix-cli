@@ -12,3 +12,20 @@ publish = false
 [dependencies]
 serde.workspace = true
 serde_json.workspace = true
+
+[dev-dependencies]
+kylix-pqc.workspace = true
+criterion.workspace = true
+rand.workspace = true
+
+[[bench]]
+name = "ml_kem"
+harness = false
+
+[[bench]]
+name = "ml_dsa"
+harness = false
+
+[[bench]]
+name = "slh_dsa"
+harness = false
