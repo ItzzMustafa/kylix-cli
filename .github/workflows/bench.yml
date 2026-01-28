@@ -61,3 +61,68 @@ jobs:
           fail-on-alert: false
           summary-always: true
           auto-push: false
+
+  external-tool-compare:
+    name: External Tools (${{ matrix.platform }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: x86_64-linux
+          - os: macos-latest
+            platform: arm64-macos
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Install build dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build
+
+      - name: Install build dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: brew install cmake ninja
+
+      - name: Build liboqs
+        run: |
+          git clone --depth 1 https://github.com/open-quantum-safe/liboqs.git /tmp/liboqs
+          cd /tmp/liboqs
+          mkdir build && cd build
+          cmake -GNinja -DBUILD_SHARED_LIBS=OFF -DOQS_BUILD_ONLY_LIB=OFF ..
+          ninja
+
+      - name: Verify liboqs build
+        run: |
+          test -x /tmp/liboqs/build/tests/speed_kem || { echo "Error: speed_kem not found"; exit 1; }
+          echo "liboqs speed_kem found at /tmp/liboqs/build/tests/speed_kem"
+
+      - name: Run external tool comparison
+        env:
+          LIBOQS_DIR: /tmp/liboqs/build
+          CARGO_TERM_COLOR: never
+        run: |
+          # Build first to separate compile output from benchmark output
+          cargo build -p kylix-cli --features bench --quiet
+          # Run benchmark and capture only program output
+          cargo run -p kylix-cli --features bench --quiet -- bench --compare --with liboqs -a ml-kem-768 -i 100 --report markdown | tee bench-result.md
+          # Fail if liboqs was not detected (output should contain "liboqs" in the table)
+          grep -q "liboqs" bench-result.md || { echo "Error: liboqs not detected in benchmark output"; exit 1; }
+
+      - name: Post benchmark results to PR
+        if: github.event.pull_request.head.repo.fork == false
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          {
+            echo "## External Tool Benchmark (${{ matrix.platform }})"
+            echo ""
+            cat bench-result.md
+          } > comment.md
+          gh pr comment ${{ github.event.pull_request.number }} --body-file comment.md
