@@ -108,13 +108,23 @@ fn detect_external_tools(filter: Option<&Vec<String>>) -> Vec<ExternalTool> {
 
 /// Detect liboqs speed_kem/speed_sig tools
 fn detect_liboqs() -> Option<ExternalTool> {
-    // Try to find speed_kem in PATH first, then common locations
+    // Try environment variables first, then PATH, then platform-specific locations
     let candidates: Vec<std::path::PathBuf> = {
         let mut paths = vec![];
 
-        // Check LIBOQS_SPEED_KEM environment variable first
+        // Check LIBOQS_SPEED_KEM environment variable first (direct path to binary)
         if let Ok(p) = std::env::var("LIBOQS_SPEED_KEM") {
             paths.push(std::path::PathBuf::from(p));
+        }
+
+        // Check LIBOQS_DIR environment variable (installation directory)
+        if let Ok(liboqs_dir) = std::env::var("LIBOQS_DIR") {
+            let base = std::path::PathBuf::from(&liboqs_dir);
+            let exe_name = format!("speed_kem{}", std::env::consts::EXE_SUFFIX);
+            // Check common build output locations
+            for subdir in ["bin", "build/tests", "tests"] {
+                paths.push(base.join(subdir).join(&exe_name));
+            }
         }
 
         // Check PATH
@@ -122,22 +132,11 @@ fn detect_liboqs() -> Option<ExternalTool> {
             paths.push(p);
         }
 
-        // Windows: check common vcpkg build locations
+        // Windows: check vcpkg build locations (VCPKG_ROOT only, no hardcoded paths)
         #[cfg(target_os = "windows")]
         {
-            // Check VCPKG_ROOT environment variable first, then common paths
-            let mut vcpkg_roots_to_check: Vec<std::path::PathBuf> = Vec::new();
             if let Ok(vcpkg_root) = std::env::var("VCPKG_ROOT") {
-                vcpkg_roots_to_check.push(std::path::PathBuf::from(vcpkg_root));
-            }
-            vcpkg_roots_to_check.extend(
-                ["C:\\vcpkg", "D:\\vcpkg", "E:\\vcpkg"]
-                    .iter()
-                    .map(std::path::PathBuf::from),
-            );
-
-            for root in vcpkg_roots_to_check {
-                let base = root.join("buildtrees\\liboqs\\src");
+                let base = std::path::PathBuf::from(&vcpkg_root).join("buildtrees\\liboqs\\src");
                 if let Ok(entries) = std::fs::read_dir(&base) {
                     for entry in entries.flatten() {
                         if entry.file_type().map(|t| t.is_dir()).unwrap_or(false) {
@@ -192,24 +191,25 @@ fn detect_liboqs() -> Option<ExternalTool> {
 
 /// Detect OpenSSL 3.5+ with PQC support
 fn detect_openssl() -> Option<ExternalTool> {
-    // Try PATH first, then common installation locations
+    // Try environment variables first, then PATH, then common installation locations
     let candidates: Vec<std::path::PathBuf> = {
         let mut paths = vec![];
+
+        // Check OPENSSL_DIR or OPENSSL_ROOT_DIR environment variables first
+        let exe_name = format!("openssl{}", std::env::consts::EXE_SUFFIX);
+        if let Ok(openssl_dir) =
+            std::env::var("OPENSSL_DIR").or_else(|_| std::env::var("OPENSSL_ROOT_DIR"))
+        {
+            let base = std::path::PathBuf::from(openssl_dir);
+            paths.push(base.join("bin").join(&exe_name));
+        }
 
         // Check PATH
         if let Ok(p) = which::which("openssl") {
             paths.push(p);
         }
 
-        // Windows: FireDaemon OpenSSL
-        #[cfg(target_os = "windows")]
-        {
-            paths.push(std::path::PathBuf::from(
-                r"C:\Program Files\FireDaemon OpenSSL 3\bin\openssl.exe",
-            ));
-        }
-
-        // macOS/Linux: Homebrew, common locations
+        // macOS/Linux: Homebrew, common locations (fallback only)
         #[cfg(not(target_os = "windows"))]
         {
             paths.push(std::path::PathBuf::from("/opt/homebrew/bin/openssl"));
